@@ -1,1 +1,25 @@
-spring.application.name=wiz
+spring:
+ application:
+  name: wiz
+
+ datasource:
+   driver-class-name: org.mariadb.jdbc.Driver
+   url: jdbc:mariadb://tomhoon.duckdns.org:33306/reformwiz
+   username: root
+   password: 2846
+
+ jpa:
+   hibernate:
+     ddl-auto: create-drop
+   properties:
+     hibernate:
+       format_sql: true
+   show-sql: true
+
+server:
+  port: 22000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
