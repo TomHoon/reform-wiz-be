@@ -55,6 +55,7 @@ public class BoardEntity {
   private LocalDate updatedAt;
 
   @Builder.Default
+  @Column(name = "is_del", nullable = false)
   private Boolean isDel = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -72,5 +73,6 @@ public class BoardEntity {
     this.usedPeriod = dto.getUsedPeriod();
     this.wishDate = dto.getWishDate();
     this.wishPlace = dto.getWishPlace();
+    this.isDel = dto.getIsDel();
   }
 }
