@@ -14,7 +14,6 @@ import org.springframework.test.annotation.Commit;
 
 import com.reform.wiz.dto.BoardDTO;
 import com.reform.wiz.dto.PageResponseDTO;
-import com.reform.wiz.entity.BoardEntity;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -65,5 +64,12 @@ public class BoardServiceTests {
     log.info(">>>>> getTotalPages" + result.getTotalPages());
     log.info(">>>>> getTotalElements " + result.getTotalElements());
 
+  }
+
+  // 글 전체조회
+  @Test
+  public void 글전체조회() {
+    List<BoardDTO> list = boardService.getAll();
+    log.info(">>>>>>> list " + list.toString());
   }
 }

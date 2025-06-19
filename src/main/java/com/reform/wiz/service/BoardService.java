@@ -27,6 +27,7 @@ public class BoardService {
   private final BoardRepository boardRepository;
   private final MemberRepository memberRepository;
 
+  // 글 전체조회
   public List<BoardDTO> getAll() {
     List<BoardDTO> list = boardRepository.findAll()
         .stream()
@@ -36,6 +37,16 @@ public class BoardService {
     return list;
   }
 
+  // 글 페이지당 조회
+  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable) {
+    Page<BoardEntity> result = boardRepository.findAll(pageable);
+
+    Page<BoardDTO> dtoPage = result.map(BoardDTO::new);
+
+    return new PageResponseDTO<>(dtoPage);
+  }
+
+  // 글 등록
   public BoardDTO register(BoardDTO dto) {
     Long mno = dto.getMemberId();
     MemberEntity memberEntity = memberRepository.findById(mno).orElseThrow();
@@ -47,6 +58,7 @@ public class BoardService {
     return new BoardDTO(result);
   }
 
+  // 글 단건조회
   public BoardDTO getOne(Long bno) {
     Optional<BoardEntity> res = boardRepository.findById(bno);
     BoardEntity e = res.orElseThrow(() -> new EntityNotFoundException("요청하신 " + bno + "를 찾을 수 없습니다."));
@@ -56,15 +68,7 @@ public class BoardService {
     return dto;
   }
 
-  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable) {
-    // 페이지당 조회
-    Page<BoardEntity> result = boardRepository.findAll(pageable);
-
-    Page<BoardDTO> dtoPage = result.map(BoardDTO::new);
-
-    return new PageResponseDTO<>(dtoPage);
-  }
-
+  // 글 삭제
   public BoardDTO deleteBoard(Long bno) {
     BoardEntity e = boardRepository.findById(bno).orElseThrow();
     e.changeIsDel(true);
@@ -74,6 +78,7 @@ public class BoardService {
     return new BoardDTO(e);
   }
 
+  // 글 수정
   public BoardDTO updateBoard(BoardDTO dto) {
     BoardEntity e = boardRepository.findById(dto.getBno()).orElseThrow();
     e.updateBoard(dto);
