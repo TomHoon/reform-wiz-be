@@ -23,7 +23,8 @@ public class PageRequestDTO {
 
   public Pageable getPageable(Sort sort) {
     int pageNum = page < 0 ? 1 : page - 1;
-    int sizeNum = size <= 10 ? 10 : size;
+    // int sizeNum = size <= 10 ? 10 : size;
+    int sizeNum = 9;
 
     return PageRequest.of(pageNum, sizeNum, sort);
   }
