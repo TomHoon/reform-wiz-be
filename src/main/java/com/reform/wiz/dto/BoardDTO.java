@@ -1,8 +1,10 @@
 package com.reform.wiz.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.reform.wiz.entity.BoardEntity;
+import com.reform.wiz.entity.File;
 import com.reform.wiz.entity.MemberEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +37,8 @@ public class BoardDTO {
 
   private Long memberId;
 
+  private List<File> files;
+
   public BoardDTO(BoardEntity entity) {
     this.bno = entity.getBno();
     this.title = entity.getTitle();
@@ -47,6 +51,7 @@ public class BoardDTO {
     this.updatedAt = entity.getUpdatedAt();
     this.isDel = entity.getIsDel();
     this.memberId = entity.getMemberEntity().getMno();
+    this.files = entity.getFiles();
   }
 
   public BoardEntity toEntity(BoardDTO dto, MemberEntity me) {
@@ -61,6 +66,7 @@ public class BoardDTO {
         .updatedAt(dto.getUpdatedAt())
         .isDel(dto.getIsDel() != null ? dto.getIsDel() : false)
         .memberEntity(me)
+        .files(dto.getFiles())
         .build();
   }
 

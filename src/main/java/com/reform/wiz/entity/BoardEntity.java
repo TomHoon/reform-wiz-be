@@ -1,13 +1,17 @@
 package com.reform.wiz.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.reform.wiz.dto.BoardDTO;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -61,6 +65,10 @@ public class BoardEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "member_mno")
   private MemberEntity memberEntity;
+
+  @ElementCollection
+  @CollectionTable(name = "file", joinColumns = @JoinColumn(name = "bno"))
+  private List<File> files = new ArrayList<>();
 
   public void changeIsDel(Boolean isDel) {
     this.isDel = isDel;
