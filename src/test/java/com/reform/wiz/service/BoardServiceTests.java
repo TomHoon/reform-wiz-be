@@ -1,6 +1,7 @@
 package com.reform.wiz.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.test.annotation.Commit;
 
 import com.reform.wiz.dto.BoardDTO;
 import com.reform.wiz.dto.PageResponseDTO;
+import com.reform.wiz.entity.File;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -38,6 +40,14 @@ public class BoardServiceTests {
   @Commit
   public void testInsert() {
     // ⚠️ 100개씩 insert
+    // ⚠️ 회원이 없는 경우 Insert 안됨
+
+    File file = new File();
+    file.setFileName("test filename");
+    file.setFileUrl("test url");
+    List<File> files = new ArrayList<>();
+    files.add(file);
+
     for (int i = 0; i < 100; i++) {
       BoardDTO dto = new BoardDTO();
       dto.setTitle("Test Title " + i);
@@ -50,6 +60,7 @@ public class BoardServiceTests {
       dto.setUpdatedAt(LocalDate.now());
       dto.setIsDel(false);
       dto.setMemberId(1L); // test용으로 1L
+      dto.setFiles(files);
       BoardDTO resultDTO = boardService.register(dto);
       log.info("resultDTO >>>>> " + resultDTO);
     }
