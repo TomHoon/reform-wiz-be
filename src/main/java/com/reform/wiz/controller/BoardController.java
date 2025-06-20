@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.reform.wiz.dto.BoardDTO;
@@ -46,7 +47,7 @@ public class BoardController {
 
   // 글 페이징처리조회
   @GetMapping("/getBoards")
-  public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoard(@RequestBody Map<String, String> param) {
+  public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoard(@RequestParam Map<String, String> param) {
     int page = Integer.parseInt(param.get("page"));
     int size = Integer.parseInt(param.get("size"));
 
