@@ -1,12 +1,12 @@
 package com.reform.wiz.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,7 +14,7 @@ import org.springframework.test.annotation.Commit;
 
 import com.reform.wiz.dto.BoardDTO;
 import com.reform.wiz.dto.PageResponseDTO;
-import com.reform.wiz.entity.BoardEntity;
+import com.reform.wiz.entity.File;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -25,45 +25,108 @@ public class BoardServiceTests {
   @Autowired
   private BoardService boardService;
 
+  /*
+   * [테스트케이스]
+   * 📌 CREATE
+   * 📌 READ (단건)
+   * 📌 READ (전체)
+   * 📌 READ (페이지)
+   * 📌 UPDATE
+   * 📌 DELETE
+   */
+
+  // ✅ CREATE
   @Test
   @Commit
   public void testInsert() {
-    // ✅ CREATE
-    BoardDTO dto = new BoardDTO();
-    dto.setTitle("Test Title");
-    dto.setBrand("BrandX");
-    dto.setContent("This is test content.");
-    dto.setUsedPeriod("1 year");
-    dto.setWishDate(LocalDate.of(2025, 7, 1));
-    dto.setWishPlace("Seoul");
-    dto.setCreatedAt(LocalDate.now());
-    dto.setUpdatedAt(LocalDate.now());
-    dto.setIsDel(false);
+    // ⚠️ 100개씩 insert
+    // ⚠️ 회원이 없는 경우 Insert 안됨
 
-    BoardDTO resultDTO = boardService.register(dto);
+    File file = new File();
+    file.setFileName("test filename");
+    file.setFileUrl("test url");
+    List<File> files = new ArrayList<>();
+    files.add(file);
 
-    log.info("resultDTO >>>>> " + resultDTO);
+    for (int i = 0; i < 100; i++) {
+      BoardDTO dto = new BoardDTO();
+      dto.setTitle("Test Title " + i);
+      dto.setBrand("BrandX" + i);
+      dto.setContent("This is test content.");
+      dto.setUsedPeriod(i + " year");
+      dto.setWishDate(LocalDate.of(2025, 7, 1));
+      dto.setWishPlace("Seoul");
+      dto.setCreatedAt(LocalDate.now());
+      dto.setUpdatedAt(LocalDate.now());
+      dto.setIsDel(false);
+      dto.setMemberId(1L); // test용으로 1L
+      dto.setFiles(files);
+      BoardDTO resultDTO = boardService.register(dto);
+      log.info("resultDTO >>>>> " + resultDTO);
+    }
   }
 
+  // ✅ READ (단건)
   @Test
   public void testRead() {
-    // ✅ READ
-    Long bno = 1L;
+    Long bno = 101L;
 
     BoardDTO dto = boardService.getOne(bno);
 
-    log.info("dto >>>> " + dto);
+    log.info("dto >>>> {} ", dto);
+  }
+
+  // ✅ READ (페이지)
+  @Test
+  public void testReadPage() {
+    int pageNum = 0; // 페이지 클릭시 param 받아서 처리
+    int size = 10; // 고정
+
+    Pageable pageable = PageRequest.of(pageNum, size, Sort.by("bno"));
+    PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable);
+
+    result.getDtoList().stream().forEach(e -> log.info(">>> list item : {} ", e));
+
+    log.info(">>>>> totalPage : {} ", result.getTotalPages());
+    log.info(">>>>> TotalElements : {} ", result.getTotalElements());
+
+  }
+
+  // ✅ READ (전체)
+  // 글 전체조회
+  @Test
+  public void 글전체조회() {
+    List<BoardDTO> list = boardService.getAll();
+    log.info(">>>>>>> list " + list.toString());
+  }
+
+  // ✅ UPDATE
+  // 수정
+  @Test
+  public void 수정() {
+    Long bno = 1L;
+
+    BoardDTO 수정전dto = boardService.getOne(bno);
+    boardService.updateBoard(수정전dto);
+    수정전dto.setContent("수정했어요");
+
+    log.info("수정 전 : {}", 수정전dto);
+
+    BoardDTO 수정후 = boardService.getOne(bno);
+    log.info("수정 후 : {}", 수정후);
   }
 
   @Test
-  public void testReadPage() {
-    // ✅ READ by Page
-    Pageable pageable = PageRequest.of(0, 10, Sort.by("bno"));
-    PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable);
+  @Commit
+  public void 삭제() {
+    // 마지막 글 찾아서 삭제 테스트
+    List<BoardDTO> list = boardService.getAll();
+    BoardDTO dto = list.get(list.size() - 1);
+    log.info("dto bno : {} ", dto.getBno());
+    log.info("before dto : {} ", dto.getIsDel());
+    dto.setIsDel(true);
 
-    log.info(">>>>> getDtoList " + result.getDtoList());
-    log.info(">>>>> getTotalPages" + result.getTotalPages());
-    log.info(">>>>> getTotalElements " + result.getTotalElements());
-
+    boardService.updateBoard(dto);
+    log.info("after dto : {} ", dto.getIsDel());
   }
 }

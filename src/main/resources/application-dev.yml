@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: wiz
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://tomhoon.duckdns.org:33306/reformwiz
+    username: root
+    password: 1234
+    hikari: # DB Pool Size
+      minimum-idle: 2
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      #ddl option: none || validate || update | create | create-drop
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+server:
+  port: 22000
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
