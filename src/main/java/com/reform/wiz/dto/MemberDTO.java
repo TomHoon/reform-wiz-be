@@ -48,4 +48,19 @@ public class MemberDTO {
     this.accountNumber = member.getAccountNumber();
   }
 
+  public MemberEntity toEntity() {
+    return MemberEntity.builder()
+        .id(this.id)
+        .password(this.password)
+        .name(this.name)
+        .nickname(this.nickname)
+        .phone(this.phone)
+        .email(this.email)
+        .isCompany(this.isCompany)
+        .bizNum(this.bizNum)
+        .accountNumber(this.accountNumber)
+        .isDel(false)
+        .build();
+  }
+
 }
