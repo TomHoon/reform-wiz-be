@@ -3,6 +3,9 @@ package com.reform.wiz.entity;
 import java.time.LocalDate;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import com.reform.wiz.dto.MemberDTO;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,6 +52,9 @@ public class MemberEntity {
   @CreatedDate
   private LocalDate createdAt;
 
+  @LastModifiedDate
+  private LocalDate updatedAt;
+
   @Builder.Default
   private Boolean isDel = false;
 
@@ -59,6 +65,17 @@ public class MemberEntity {
 
   public void changeNickname(String nickname) {
     this.nickname = nickname;
+  }
+
+  public void changeIsDel(boolean isDel) {
+    this.isDel = isDel;
+  }
+
+  public void updateProfile(MemberDTO dto) {
+    this.nickname = dto.getNickname();
+    this.email = dto.getEmail();
+    this.phone = dto.getPhone();
+    this.accountNumber = dto.getAccountNumber();
   }
 
 }

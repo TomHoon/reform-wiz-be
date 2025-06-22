@@ -4,9 +4,13 @@ import java.time.LocalDate;
 
 import com.reform.wiz.entity.MemberEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberDTO {
 
   private Long mno;
@@ -46,6 +50,21 @@ public class MemberDTO {
     this.isDel = member.getIsDel();
     this.bizNum = member.getBizNum();
     this.accountNumber = member.getAccountNumber();
+  }
+
+  public MemberEntity toEntity() {
+    return MemberEntity.builder()
+        .id(this.id)
+        .password(this.password)
+        .name(this.name)
+        .nickname(this.nickname)
+        .phone(this.phone)
+        .email(this.email)
+        .isCompany(this.isCompany)
+        .bizNum(this.bizNum)
+        .accountNumber(this.accountNumber)
+        .isDel(false)
+        .build();
   }
 
 }
