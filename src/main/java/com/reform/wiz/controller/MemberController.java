@@ -36,10 +36,10 @@ public class MemberController {
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 
-  // 아이디/비밀번호 찾기 (이메일 기반 예시)
+  // 아이디/비밀번호 찾기
   @PostMapping("/find")
   public ResponseEntity<ApiResponse<MemberDTO>> find(@RequestBody MemberDTO dto) {
-    MemberDTO result = memberService.findByIdOrPw(dto.getEmail());
+    MemberDTO result = memberService.findByIdOrPw(dto.getPhone());
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 

@@ -4,9 +4,13 @@ import java.time.LocalDate;
 
 import com.reform.wiz.entity.MemberEntity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberDTO {
 
   private Long mno;
