@@ -27,7 +27,7 @@ public class BidService {
 
   // 입찰 리스트 조회
   public List<BidDTO> getBidList(Long bno) {
-    List<BidEntity> res = bidRepository.findByBoard_Bno(bno);
+    List<BidEntity> res = bidRepository.findByBoardEntity_Bno(bno);
     List<BidDTO> list = res.stream().map(e -> new BidDTO(e)).collect(Collectors.toList());
 
     return list;
