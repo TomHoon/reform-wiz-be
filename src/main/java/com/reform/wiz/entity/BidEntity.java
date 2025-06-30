@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,7 @@ import lombok.extern.log4j.Log4j2;
 @AllArgsConstructor
 @Log4j2
 @Builder
+@Table(name = "tbl_bid")
 public class BidEntity {
 
   @Id
@@ -42,7 +44,6 @@ public class BidEntity {
   private MemberEntity memberEntity;
 
   public void update(BidDTO dto) {
-    this.bno = dto.getBno();
     this.bidPrice = dto.getBidPrice();
     this.isBid = dto.getIsBid();
   }
