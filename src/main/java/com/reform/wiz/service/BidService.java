@@ -13,12 +13,14 @@ import com.reform.wiz.repository.BidRepository;
 import com.reform.wiz.repository.BoardRepository;
 import com.reform.wiz.repository.MemberRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 @Service
 @Log4j2
 @RequiredArgsConstructor
+@Transactional
 public class BidService {
 
   private final BidRepository bidRepository;
@@ -54,6 +56,7 @@ public class BidService {
 
   }
 
+  // 입찰요청
   public Boolean requestBid(Long boardno, Long mno, BidDTO dto) {
     MemberEntity mEntity = memberRepository.findById(mno).orElseThrow();
     BoardEntity bEntity = boardRepository.findById(boardno).orElseThrow();
