@@ -1,5 +1,6 @@
 package com.reform.wiz.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,13 +51,19 @@ public class BoardController {
   public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoard(@RequestParam Map<String, String> param) {
     int page = Integer.parseInt(param.get("page"));
     int size = Integer.parseInt(param.get("size"));
+    String title = (String) (param.get("title"));
+    String content = (String) (param.get("content"));
+
+    Map<String, String> searchMap = new HashMap<>();
+    searchMap.put("title", title);
+    searchMap.put("content", content);
 
     PageRequestDTO dto = PageRequestDTO.builder()
         .page(page)
         .size(size)
         .build();
 
-    PageResponseDTO res = boardService.getAllByPage(dto.getPageable(Sort.by("bno")));
+    PageResponseDTO res = boardService.getAllByPage(dto.getPageable(Sort.by("bno")), searchMap);
     return ResponseEntity.ok(ApiResponse.success(res));
   }
 

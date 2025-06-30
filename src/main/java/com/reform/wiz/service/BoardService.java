@@ -1,6 +1,7 @@
 package com.reform.wiz.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -38,8 +39,11 @@ public class BoardService {
   }
 
   // 글 페이지당 조회
-  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable) {
-    Page<BoardEntity> result = boardRepository.findAll(pageable);
+  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable, Map<String, String> map) {
+    String title = map.get("title");
+    String content = map.get("content");
+
+    Page<BoardEntity> result = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
 
     Page<BoardDTO> dtoPage = result.map(BoardDTO::new);
 
