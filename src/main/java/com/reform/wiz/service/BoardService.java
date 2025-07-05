@@ -91,4 +91,13 @@ public class BoardService {
 
     return new BoardDTO(e);
   }
+
+  // 글 조회(유저별)
+  public PageResponseDTO<BoardDTO> getBoardByMemberId(String memberId, Pageable page) {
+    Page<BoardEntity> result = boardRepository.findByMemberEntity_MemberId(memberId, page);
+    Page<BoardDTO> list = result.map(BoardDTO::new);
+
+    return new PageResponseDTO<BoardDTO>(list);
+  }
+
 }

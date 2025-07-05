@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -89,5 +90,16 @@ public class BoardController {
 
     return ResponseEntity.ok(ApiResponse.success(resultDTO));
   }
+  
+  // 글 조회(유저별)
+  @GetMapping("/getBoards/{memberId}")
+  public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoardByMemberId(@RequestParam Map<String, Object> param, @PathVariable String memberId) {
+    int pageNum = (int) param.get("page");
 
+    Pageable page = PageRequestDTO.builder().page(pageNum).build().getPageable(Sort.by("bno"));
+
+    PageResponseDTO<BoardDTO> list = boardService.getBoardByMemberId(memberId, page);
+    
+    return ResponseEntity.ok(ApiResponse.success(list));
+  }
 }
