@@ -27,8 +27,8 @@ public class MemberService {
   }
 
   // 로그인
-  public MemberDTO login(String Id, String password) {
-    MemberEntity member = memberRepository.findById(Id)
+  public MemberDTO login(String memberId, String password) {
+    MemberEntity member = memberRepository.findByMemberId(memberId)
         .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
 
     if (!member.getPassword().equals(password)) {

@@ -31,7 +31,7 @@ public class MemberServiceTests {
     public void testLogin() {
         // 먼저 회원 등록
         MemberDTO dto = new MemberDTO();
-        dto.setId("loginUser");
+        dto.setMemberId("loginUser");
         dto.setPassword("loginpw");
         dto.setName("로그인용");
         dto.setNickname("로그인닉");
@@ -43,7 +43,7 @@ public class MemberServiceTests {
 
         // 로그인 테스트
         MemberDTO loginResult = memberService.login("loginUser", "loginpw");
-        assertThat(loginResult.getId()).isEqualTo("loginUser");
+        assertThat(loginResult.getMemberId()).isEqualTo("loginUser");
 
         log.info("로그인 성공: {}", loginResult);
     }
@@ -53,7 +53,7 @@ public class MemberServiceTests {
     public void testFindByPhone() {
         // 테스트용 회원 등록
         MemberDTO dto = new MemberDTO();
-        dto.setId("findUser");
+        dto.setMemberId("findUser");
         dto.setPassword("findpw");
         dto.setName("찾기용");
         dto.setNickname("찾기닉");
@@ -75,7 +75,7 @@ public class MemberServiceTests {
     @Commit
     public void testJoin() {
         MemberDTO dto = new MemberDTO();
-        dto.setId("testUser123");
+        dto.setMemberId("testUser123");
         dto.setPassword("password");
         dto.setName("테스터");
         dto.setNickname("tester123");
@@ -84,7 +84,7 @@ public class MemberServiceTests {
         dto.setIsCompany(false);
 
         MemberDTO saved = memberService.join(dto);
-        assertThat(saved.getId()).isEqualTo("testUser123");
+        assertThat(saved.getMemberId()).isEqualTo("testUser123");
 
         log.info("가입 완료: {}", saved);
     }

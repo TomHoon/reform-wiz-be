@@ -32,8 +32,8 @@ public class MemberEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long mno;
 
-  @Column(unique = true)
-  private String id;
+  @Column(unique = true, name = "member_id")
+  private String memberId;
 
   private String password;
 
