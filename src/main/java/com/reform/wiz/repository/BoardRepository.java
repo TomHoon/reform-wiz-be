@@ -8,5 +8,6 @@ import com.reform.wiz.entity.BoardEntity;
 
 public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
   Page<BoardEntity> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
-
+  
+  Page<BoardEntity> findByMemberEntity_MemberId(String memberId, Pageable page);
 }

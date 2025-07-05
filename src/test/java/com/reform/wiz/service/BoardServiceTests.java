@@ -1,8 +1,12 @@
 package com.reform.wiz.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 
 import com.reform.wiz.dto.BoardDTO;
+import com.reform.wiz.dto.PageRequestDTO;
 import com.reform.wiz.dto.PageResponseDTO;
 import com.reform.wiz.entity.File;
 
@@ -83,7 +88,10 @@ public class BoardServiceTests {
     int size = 10; // 고정
 
     Pageable pageable = PageRequest.of(pageNum, size, Sort.by("bno"));
-    PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable);
+    Map<String, String> map = new HashMap<>();
+    map.put("title", "test");
+    map.put("content", "test");
+    PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable, map);
 
     result.getDtoList().stream().forEach(e -> log.info(">>> list item : {} ", e));
 
@@ -128,5 +136,20 @@ public class BoardServiceTests {
 
     boardService.updateBoard(dto);
     log.info("after dto : {} ", dto.getIsDel());
+  }
+
+  @Test
+  public void 유저페이징글조회() {
+    Pageable page = PageRequestDTO.builder().page(1).build().getPageable(Sort.by("bno"));
+    PageResponseDTO<BoardDTO> res = boardService.getBoardByMemberId("loginUser", page);
+    
+    log.info(">>>>getMemberId {} ", res.getDtoList().get(0).getMemberId());
+
+    assertThat(res.getDtoList())
+    .isNotEmpty()
+    .allSatisfy(
+      dto -> assertThat(dto).isInstanceOf(BoardDTO.class)
+    );
+
   }
 }
