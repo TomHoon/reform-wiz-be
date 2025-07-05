@@ -24,7 +24,7 @@ public class MemberRepositoryTests {
   public void testInsert() {
     // ✅ CREATE
     MemberEntity e = MemberEntity.builder()
-        .id("user123")
+        .memberId("user123")
         .password("secret")
         .name("Tom")
         .nickname("tommy")

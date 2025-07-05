@@ -32,7 +32,7 @@ public class MemberController {
   // 로그인
   @PostMapping("/login")
   public ResponseEntity<ApiResponse<MemberDTO>> login(@RequestBody MemberDTO dto) {
-    MemberDTO result = memberService.login(dto.getId(), dto.getPassword());
+    MemberDTO result = memberService.login(dto.getMemberId(), dto.getPassword());
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 

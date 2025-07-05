@@ -15,7 +15,7 @@ public class MemberDTO {
 
   private Long mno;
 
-  private String id;
+  private String memberId;
 
   private String password;
 
@@ -39,7 +39,7 @@ public class MemberDTO {
 
   public MemberDTO(MemberEntity member) {
     this.mno = member.getMno();
-    this.id = member.getId();
+    this.memberId = member.getMemberId();
     this.password = member.getPassword();
     this.name = member.getName();
     this.nickname = member.getNickname();
@@ -54,7 +54,7 @@ public class MemberDTO {
 
   public MemberEntity toEntity() {
     return MemberEntity.builder()
-        .id(this.id)
+        .memberId(this.memberId)
         .password(this.password)
         .name(this.name)
         .nickname(this.nickname)
