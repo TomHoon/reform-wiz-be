@@ -39,15 +39,31 @@ public class BoardService {
   }
 
   // 글 페이지당 조회
-  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable, Map<String, String> map) {
-    String title = map.get("title");
-    String content = map.get("content");
+  public PageResponseDTO<BoardDTO> getAllByPage(Pageable pageable, Map<String, Object> map) {
+    String title = (String) map.get("title");
+    String content = (String) map.get("content");
+    int page = (int) map.get("page");
+    int size = (int) map.get("size");
 
     Page<BoardEntity> result = boardRepository.findByTitleContainingOrContentContaining(title, content, pageable);
-
     Page<BoardDTO> dtoPage = result.map(BoardDTO::new);
 
-    return new PageResponseDTO<>(dtoPage);
+    int totalPages = dtoPage.getTotalPages();
+
+    int currentGroup = (page - 1) / 10;
+    int startPage = currentGroup * 10 + 1;
+    int endPage = Math.min(startPage + 9, totalPages);
+
+    boolean hasPrevGroup = startPage > 1;
+    boolean hasNextGroup = endPage < totalPages;
+
+    PageResponseDTO<BoardDTO> pageRes = new PageResponseDTO<>(dtoPage);
+    pageRes.setHasNextGroup(hasNextGroup);
+    pageRes.setHasPrevGroup(hasPrevGroup);
+    pageRes.setStartPage(startPage);
+    pageRes.setEndPage(endPage);
+
+    return pageRes;
   }
 
   // 글 등록

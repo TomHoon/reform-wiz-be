@@ -55,16 +55,18 @@ public class BoardController {
     String title = (String) (param.get("title"));
     String content = (String) (param.get("content"));
 
-    Map<String, String> searchMap = new HashMap<>();
+    Map<String, Object> searchMap = new HashMap<>();
     searchMap.put("title", title);
     searchMap.put("content", content);
+    searchMap.put("page", page);
+    searchMap.put("size", 9);
 
     PageRequestDTO dto = PageRequestDTO.builder()
         .page(page)
         .size(size)
         .build();
 
-    PageResponseDTO res = boardService.getAllByPage(dto.getPageable(Sort.by("bno")), searchMap);
+    PageResponseDTO<BoardDTO> res = boardService.getAllByPage(dto.getPageable(Sort.by("bno")), searchMap);
     return ResponseEntity.ok(ApiResponse.success(res));
   }
 
@@ -90,16 +92,17 @@ public class BoardController {
 
     return ResponseEntity.ok(ApiResponse.success(resultDTO));
   }
-  
+
   // 글 조회(유저별)
   @GetMapping("/getBoards/{memberId}")
-  public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoardByMemberId(@RequestParam Map<String, Object> param, @PathVariable String memberId) {
+  public ResponseEntity<ApiResponse<PageResponseDTO<BoardDTO>>> getBoardByMemberId(
+      @RequestParam Map<String, Object> param, @PathVariable String memberId) {
     int pageNum = (int) param.get("page");
 
     Pageable page = PageRequestDTO.builder().page(pageNum).build().getPageable(Sort.by("bno"));
 
     PageResponseDTO<BoardDTO> list = boardService.getBoardByMemberId(memberId, page);
-    
+
     return ResponseEntity.ok(ApiResponse.success(list));
   }
 }

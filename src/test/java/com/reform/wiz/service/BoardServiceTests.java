@@ -88,7 +88,7 @@ public class BoardServiceTests {
     int size = 10; // 고정
 
     Pageable pageable = PageRequest.of(pageNum, size, Sort.by("bno"));
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put("title", "test");
     map.put("content", "test");
     PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable, map);
