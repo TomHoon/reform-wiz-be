@@ -1,11 +1,13 @@
 package com.reform.wiz.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.reform.wiz.dto.BoardDTO;
 
@@ -13,6 +15,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +36,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "tbl_board")
 @Builder
+@EntityListeners(AuditingEntityListener.class)
+
 public class BoardEntity {
 
   @Id
@@ -53,10 +58,10 @@ public class BoardEntity {
   private String wishPlace;
 
   @CreatedDate
-  private LocalDate createdAt;
+  private LocalDateTime createdAt;
 
   @LastModifiedDate
-  private LocalDate updatedAt;
+  private LocalDateTime updatedAt;
 
   @Builder.Default
   @Column(name = "is_del", nullable = false)

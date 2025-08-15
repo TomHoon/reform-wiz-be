@@ -1,6 +1,7 @@
 package com.reform.wiz.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.reform.wiz.entity.BoardEntity;
@@ -29,9 +30,9 @@ public class BoardDTO {
 
   private String wishPlace;
 
-  private LocalDate createdAt;
+  private LocalDateTime createdAt;
 
-  private LocalDate updatedAt;
+  private LocalDateTime updatedAt;
 
   private Boolean isDel = false;
 

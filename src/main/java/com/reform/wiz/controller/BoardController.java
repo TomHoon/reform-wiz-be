@@ -1,5 +1,7 @@
 package com.reform.wiz.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.reform.wiz.dto.BoardDTO;
 import com.reform.wiz.dto.PageRequestDTO;
 import com.reform.wiz.dto.PageResponseDTO;
+import com.reform.wiz.entity.File;
 import com.reform.wiz.service.BoardService;
 import com.reform.wiz.utils.ApiResponse;
+import com.reform.wiz.utils.FileUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 public class BoardController {
 
   private final BoardService boardService;
+  private final FileUtil fileUtil;
 
   // 글 전체조회
   @GetMapping("/getAll")
@@ -66,13 +72,41 @@ public class BoardController {
         .size(size)
         .build();
 
-    PageResponseDTO<BoardDTO> res = boardService.getAllByPage(dto.getPageable(Sort.by("bno")), searchMap);
+    PageResponseDTO<BoardDTO> res = boardService.getAllByPage(dto.getPageable(Sort.by(Sort.Direction.DESC, "bno")),
+        searchMap);
     return ResponseEntity.ok(ApiResponse.success(res));
   }
 
   // 글 등록
   @PostMapping("/register")
-  public ResponseEntity<ApiResponse<BoardDTO>> registerBoard(@RequestBody BoardDTO dto) {
+  public ResponseEntity<ApiResponse<BoardDTO>> registerBoard(
+      @RequestParam("title") String title,
+      @RequestParam("content") String content,
+      @RequestParam("wishPlace") String wishPlace,
+      @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
+
+    BoardDTO dto = new BoardDTO();
+    dto.setTitle(title);
+    dto.setContent(content);
+    dto.setWishPlace(wishPlace);
+    // 테스트용
+    dto.setMemberId(1L);
+
+    if (!files.isEmpty() && files.size() > 0) {
+      List<File> list = new ArrayList<>();
+
+      for (MultipartFile f : files) {
+        String fileName = fileUtil.upload(f);
+
+        File uploadedFile = new File();
+        uploadedFile.setFileName(fileName);
+
+        list.add(uploadedFile);
+      }
+
+      dto.setFiles(list);
+    }
+
     // 글 등록
     BoardDTO resultDTO = boardService.register(dto);
     return ResponseEntity.ok(ApiResponse.success(resultDTO));
