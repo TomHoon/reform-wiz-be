@@ -1,9 +1,14 @@
 package com.reform.wiz.dto;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.reform.wiz.entity.MemberEntity;
+import com.reform.wiz.utils.MemberRole;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +30,8 @@ public class MemberDTO {
 
   private String phone;
 
+  private String role;
+
   private String email;
 
   private Boolean isCompany;
@@ -36,6 +43,9 @@ public class MemberDTO {
   private String bizNum;
 
   private String accountNumber;
+
+  private String accessToken;
+  private String refreshToken;
 
   public MemberDTO(MemberEntity member) {
     this.mno = member.getMno();
@@ -67,4 +77,14 @@ public class MemberDTO {
         .build();
   }
 
+  public Map<String, Object> getDataMap() {
+    Map<String, Object> map = new HashMap<>();
+    map.put("mno", mno);
+    map.put("memberId", memberId);
+    map.put("role", role);
+    map.put("email", email);
+    map.put("nickname", nickname);
+
+    return map;
+  }
 }

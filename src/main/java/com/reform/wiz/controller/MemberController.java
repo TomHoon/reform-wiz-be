@@ -1,5 +1,6 @@
 package com.reform.wiz.controller;
 
+import com.reform.wiz.utils.JwtUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,12 +16,15 @@ import com.reform.wiz.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/member")
 @RequiredArgsConstructor
 public class MemberController {
 
   private final MemberService memberService;
+  private final JwtUtil jwtUtil;
 
   // 회원가입
   @PostMapping("/join")
@@ -33,6 +37,13 @@ public class MemberController {
   @PostMapping("/login")
   public ResponseEntity<ApiResponse<MemberDTO>> login(@RequestBody MemberDTO dto) {
     MemberDTO result = memberService.login(dto.getMemberId(), dto.getPassword());
+
+    String accessToken = jwtUtil.createToken(result.getDataMap(), 10);
+    String refreshToken = jwtUtil.createToken(Map.of("mid", result.getMemberId()), 60);
+
+    result.setAccessToken(accessToken);
+    result.setRefreshToken(refreshToken);
+
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 

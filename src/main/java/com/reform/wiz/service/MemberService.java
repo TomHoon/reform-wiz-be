@@ -1,9 +1,11 @@
 package com.reform.wiz.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.reform.wiz.dto.MemberDTO;
 import com.reform.wiz.entity.MemberEntity;
+import com.reform.wiz.exception.MemberExceptions;
 import com.reform.wiz.repository.MemberRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -16,9 +18,14 @@ import lombok.extern.log4j.Log4j2;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+  private final PasswordEncoder passwordEncoder;
 
   // 회원가입
   public MemberDTO join(MemberDTO dto) {
+    String password = dto.getPassword();
+    password = passwordEncoder.encode(password);
+    dto.setPassword(password);
+
     MemberEntity entity = dto.toEntity();
 
     MemberEntity saved = memberRepository.save(entity);
@@ -31,8 +38,10 @@ public class MemberService {
     MemberEntity member = memberRepository.findByMemberId(memberId)
         .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
 
-    if (!member.getPassword().equals(password)) {
-      throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+    Boolean isSame = passwordEncoder.matches(password, member.getPassword());
+
+    if (!isSame) {
+      throw MemberExceptions.BAD_CREDENTIALS.get();
     }
 
     return new MemberDTO(member);
@@ -73,5 +82,10 @@ public class MemberService {
 
     MemberEntity updated = memberRepository.save(member);
     return new MemberDTO(updated);
+  }
+
+  public MemberDTO getByMemberId(String memberId) {
+    MemberEntity e = memberRepository.findByMemberId(memberId).orElseThrow(MemberExceptions.NOT_FOUND::get);
+    return new MemberDTO(e);
   }
 }
