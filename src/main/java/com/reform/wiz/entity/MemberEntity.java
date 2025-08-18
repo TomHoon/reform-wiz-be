@@ -2,17 +2,12 @@ package com.reform.wiz.entity;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.reform.wiz.dto.MemberDTO;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +44,8 @@ public class MemberEntity {
 
   private Boolean isCompany;
 
+  private String role;
+
   @CreatedDate
   private LocalDate createdAt;
 
@@ -69,6 +66,10 @@ public class MemberEntity {
 
   public void changeIsDel(boolean isDel) {
     this.isDel = isDel;
+  }
+
+  public void changePassword(String password) {
+    this.password = password;
   }
 
   public void updateProfile(MemberDTO dto) {

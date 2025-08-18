@@ -10,6 +10,7 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://192.168.0.10:33306/reformwiz
+    #url: jdbc:mariadb://172.19.0.2:3306/reformwiz
     username: root
     password: 2846
     hikari: # DB Pool Size
@@ -31,3 +32,10 @@ server:
       charset: UTF-8
       force: true
       enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        security:
+          web: trace
