@@ -3,6 +3,7 @@ package com.reform.wiz.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,8 +62,8 @@ public class BoardServiceTests {
       dto.setUsedPeriod(i + " year");
       dto.setWishDate(LocalDate.of(2025, 7, 1));
       dto.setWishPlace("Seoul");
-      dto.setCreatedAt(LocalDate.now());
-      dto.setUpdatedAt(LocalDate.now());
+      dto.setCreatedAt(LocalDateTime.now());
+      dto.setUpdatedAt(LocalDateTime.now());
       dto.setIsDel(false);
       dto.setMemberId(1L); // test용으로 1L
       dto.setFiles(files);
@@ -88,7 +89,7 @@ public class BoardServiceTests {
     int size = 10; // 고정
 
     Pageable pageable = PageRequest.of(pageNum, size, Sort.by("bno"));
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
     map.put("title", "test");
     map.put("content", "test");
     PageResponseDTO<BoardDTO> result = boardService.getAllByPage(pageable, map);
@@ -142,14 +143,13 @@ public class BoardServiceTests {
   public void 유저페이징글조회() {
     Pageable page = PageRequestDTO.builder().page(1).build().getPageable(Sort.by("bno"));
     PageResponseDTO<BoardDTO> res = boardService.getBoardByMemberId("loginUser", page);
-    
+
     log.info(">>>>getMemberId {} ", res.getDtoList().get(0).getMemberId());
 
     assertThat(res.getDtoList())
-    .isNotEmpty()
-    .allSatisfy(
-      dto -> assertThat(dto).isInstanceOf(BoardDTO.class)
-    );
+        .isNotEmpty()
+        .allSatisfy(
+            dto -> assertThat(dto).isInstanceOf(BoardDTO.class));
 
   }
 }

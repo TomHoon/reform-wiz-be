@@ -17,6 +17,10 @@ public class PageResponseDTO<T> {
   private List<T> dtoList = new ArrayList<>();
   private int totalPages = 0;
   private long totalElements = 0;
+  private boolean hasPrevGroup = false;
+  private boolean hasNextGroup = false;
+  private int startPage = 1;
+  private int endPage = 1;
 
   public PageResponseDTO(Page<T> result) {
     this.dtoList = result.getContent();

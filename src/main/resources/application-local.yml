@@ -1,12 +1,17 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
   application:
     name: wiz
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/reformwiz
+    url: jdbc:mariadb://192.168.0.10:33306/reformwiz
     username: root
-    password: 1234
+    password: 2846
     hikari: # DB Pool Size
       minimum-idle: 2
       maximum-pool-size: 5
