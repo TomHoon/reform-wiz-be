@@ -1,4 +1,4 @@
-package com.reform.wiz.security.filter.auth;
+package com.reform.wiz.security.auth;
 
 import lombok.RequiredArgsConstructor;
 

@@ -87,11 +87,11 @@ public class MemberServiceTests {
     public void testJoin() {
         String test = "1234";
         MemberEntity e = MemberEntity.builder()
-                .memberId("test7")
+                .memberId("test8")
                 .password(passwordEncoder.encode(test))
-                .name("동훈7")
-                .nickname("tomhoon7")
-                .phone("01028969992")
+                .name("동훈8")
+                .nickname("tomhoon8")
+                .phone("01028469992")
                 .email("test@gmail.com")
                 .isCompany(false)
                 .role("USER")
