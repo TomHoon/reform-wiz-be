@@ -1,6 +1,5 @@
-package com.reform.wiz.security.filter.filter;
-
-import com.reform.wiz.security.filter.auth.CustomUserPrincipal;
+package com.reform.wiz.security.filter;
+import com.reform.wiz.security.auth.CustomUserPrincipal;
 import com.reform.wiz.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -19,13 +19,20 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Component
 public class JWTCheckFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getServletPath().startsWith("/api/v1/token")) {
+        String path = request.getServletPath();
+        if (
+            path.startsWith("/api/v1/token")
+            || path.startsWith("/api/v1/member/login")
+            || path.startsWith("/api/v1/member/logout")
+            || path.startsWith("/api/v1/member/join")
+        ) {
             return true;
         }
 

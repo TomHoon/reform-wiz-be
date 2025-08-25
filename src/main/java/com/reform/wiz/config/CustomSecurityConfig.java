@@ -2,7 +2,8 @@ package com.reform.wiz.config;
 
 import java.util.Arrays;
 
-import com.reform.wiz.security.filter.filter.JWTCheckFilter;
+import com.reform.wiz.security.filter.JWTCheckFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -20,54 +21,56 @@ import lombok.extern.log4j.Log4j2;
 
 @Configuration
 @Log4j2
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true) // @PreAuthorize로 컨트롤
+@RequiredArgsConstructor
 public class CustomSecurityConfig {
 
- private JWTCheckFilter jwtCheckFilter;
+  private final JWTCheckFilter jwtCheckFilter;
 
- @Bean
- public PasswordEncoder passwordEncoder() {
-  return new BCryptPasswordEncoder();
- }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
- @Bean
- public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-  http.csrf(config -> config.disable());
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-  http.logout(config -> config.disable());
+    http.csrf(config -> config.disable());
 
-  http.formLogin(httpSecurityFormLoginConfigurer -> {
-   httpSecurityFormLoginConfigurer.disable();
-  });
+    http.logout(config -> config.disable());
 
-  // cors 제거
-  http.cors(httpSecurityCorsConfigurer -> {
-   httpSecurityCorsConfigurer.configurationSource(configurationSource());
-  });
+    http.formLogin(httpSecurityFormLoginConfigurer -> {
+      httpSecurityFormLoginConfigurer.disable();
+    });
 
-  http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.NEVER));
+    // cors 제거
+    http.cors(httpSecurityCorsConfigurer -> {
+      httpSecurityCorsConfigurer.configurationSource(configurationSource());
+    });
 
-  http.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
+    http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.NEVER));
 
-  return http.build();
- }
+    http.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
 
- @Bean
- public CorsConfigurationSource configurationSource() {
-  CorsConfiguration configuration = new CorsConfiguration();
+    return http.build();
+  }
 
-  configuration.setAllowedOrigins(Arrays.asList(
-    "http://localhost:3000",
-    "https://reformwiz.com"));
+  @Bean
+  public CorsConfigurationSource configurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-  configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
-  configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-  configuration.setAllowCredentials(true);
+    configuration.setAllowedOrigins(Arrays.asList(
+        "http://localhost:3000",
+        "https://reformwiz.com"));
 
-  UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-  source.registerCorsConfiguration("/**", configuration);
+    configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE"));
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+    configuration.setAllowCredentials(true);
 
-  return source;
- }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    return source;
+  }
 }

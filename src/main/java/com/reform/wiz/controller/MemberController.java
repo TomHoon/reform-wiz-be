@@ -1,6 +1,8 @@
 package com.reform.wiz.controller;
 
 import com.reform.wiz.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +35,27 @@ public class MemberController {
     return ResponseEntity.ok(ApiResponse.success(result));
   }
 
+  // 로그아웃
+  @PostMapping("/logout")
+  public ResponseEntity<ApiResponse<Map<String, Object>>> logout(HttpServletResponse response) {
+
+    ResponseCookie cookie = ResponseCookie
+            .from("accessToken", "")
+            .secure(true)  // true in production
+            .httpOnly(true)
+            .path("/")
+            .maxAge(0)      // delete immediately
+            .build();
+
+    response.addHeader("Set-Cookie", cookie.toString());
+
+    return ResponseEntity.ok(ApiResponse.success(Map.of("result", "success")));
+
+  }
+
   // 로그인
   @PostMapping("/login")
-  public ResponseEntity<ApiResponse<MemberDTO>> login(@RequestBody MemberDTO dto) {
+  public ResponseEntity<ApiResponse<MemberDTO>> login(@RequestBody MemberDTO dto, HttpServletResponse response) {
     MemberDTO result = memberService.login(dto.getMemberId(), dto.getPassword());
 
     String accessToken = jwtUtil.createToken(result.getDataMap(), 10);
@@ -43,6 +63,25 @@ public class MemberController {
 
     result.setAccessToken(accessToken);
     result.setRefreshToken(refreshToken);
+
+    /*Cookie cookie = new Cookie("access_token", accessToken);
+    cookie.setHttpOnly(true); // 🚨 cannot be accessed by JS
+    cookie.setSecure(false);   // only over HTTPS
+    cookie.setPath("/");
+    cookie.setMaxAge(60 * 60); // 1 hour
+    response.addCookie(cookie);*/
+
+    ResponseCookie cookie = ResponseCookie
+            .from("accessToken",accessToken)
+            .domain("localhost")
+            .maxAge(60)
+            .sameSite("None")
+            .secure(true)
+            .httpOnly(true)
+            .path("/")
+            .build();
+
+    response.addHeader("Set-Cookie", cookie.toString());
 
     return ResponseEntity.ok(ApiResponse.success(result));
   }
